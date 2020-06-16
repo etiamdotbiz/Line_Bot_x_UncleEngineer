@@ -18,22 +18,29 @@ def GET_BTC_PRICE():
 def webhook():
     if request.method == 'POST':
         payload = request.json
-
+        # print(payload)
         Reply_token = payload['events'][0]['replyToken']
         print(Reply_token)
         message = payload['events'][0]['message']['text']
         print(message)
+        print(len(message))
+        # command = message[:4]
+        stock = message[5:]
+        print(stock)
+        # ReplyMessage(Reply_token,stock,Channel_access_token)
         if 'หุ้น' in message :
-            ITD = thaistock('ITD')
-            Reply_messasge = 'ราคาหุ้น อิตาเลียนไทย ขณะนี้ : {}'.format(ITD)
+            ITD = thaistock(stock)
+            print(ITD)
+            Reply_messasge = 'ราคาหุ้น ' + stock + ' ขณะนี้ : {}'.format(ITD)
+            print(Reply_messasge)
             ReplyMessage(Reply_token,Reply_messasge,Channel_access_token)
         
-        elif "btc" in message :
-            Reply_messasge = 'ราคา BITCOIN ขณะนี้ : {}'.format(GET_BTC_PRICE())
-            ReplyMessage(Reply_token,Reply_messasge,Channel_access_token)
+        # elif "btc" in message :
+        #     Reply_messasge = 'ราคา BITCOIN ขณะนี้ : {}'.format(GET_BTC_PRICE())
+        #     ReplyMessage(Reply_token,Reply_messasge,Channel_access_token)
 
 
-        return request.json, 200
+        return payload, 200
 
     elif request.method == 'GET' :
         return 'this is method GET!!!' , 200
